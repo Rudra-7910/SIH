@@ -7,24 +7,32 @@ export default {
   theme: {
     extend: {
       colors: {
-        navy: {
-          50: '#f0f4f8',
-          100: '#d9e2ec',
-          200: '#bcccdc',
-          300: '#9fb3c8',
-          400: '#829ab1',
-          500: '#627d98',
-          600: '#486581',
-          700: '#334e68',
-          800: '#243b53',
-          900: '#102a43', // deep navy
+        canvas: {
+          DEFAULT: '#0B132B',
+          alt: '#0F172A',
         },
-        electric: '#3b82f6', // blue-500
+        lmed: {
+          card: '#162238',
+          elevated: '#1A2744',
+          border: '#2B3D5E',
+          navy: '#1C3D5A',
+          blue: '#1E3A8A',
+          saffron: '#D97706',
+          'saffron-dark': '#B45309',
+          pass: '#047857',
+          review: '#B45309',
+          breach: '#B91C1C',
+        },
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-      }
+        sans: ['IBM Plex Sans', 'Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+        display: ['Plus Jakarta Sans', 'IBM Plex Sans', 'sans-serif'],
+        mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
+      },
+      maxWidth: {
+        desk: '1600px',
+      },
     },
   },
   plugins: [],
-}
+};

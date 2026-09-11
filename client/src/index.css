@@ -1,45 +1,257 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+/* ─── LMED-Inspector v2.4 — Statutory Design Tokens ─────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Executive National Canvas */
+  --canvas:           #0B132B;
+  --canvas-alt:       #0F172A;
+  --surface:          #0F172A;
+  --surface-card:     #162238;
+  --surface-elevated: #1A2744;
+  --surface-hover:    #1E3050;
+
+  --border:           #2B3D5E;
+  --border-subtle:    #243352;
+  --border-focus:     #1E3A8A;
+
+  /* State Authority */
+  --ashoka-navy:      #1C3D5A;
+  --ashoka-blue:      #1E3A8A;
+  --ashoka-light:     #2563EB;
+  --saffron:          #D97706;
+  --saffron-dark:     #B45309;
+
+  /* Statutory Status Ledger */
+  --status-pass:      #047857;
+  --status-pass-bg:   #064E3B;
+  --status-pass-light:#ECFDF5;
+  --status-review:    #B45309;
+  --status-review-bg: #FFFBEB;
+  --status-breach:    #B91C1C;
+  --status-breach-bg: #991B1B;
+  --status-breach-light: #FEF2F2;
+
+  /* Typography */
+  --text-base:        #E2E8F0;
+  --text-muted:       #94A3B8;
+  --text-dim:         #64748B;
+  --text-bright:      #F8FAFC;
+  --text-legal:       #CBD5E1;
+}
+
 @layer base {
   body {
-    @apply bg-navy-900 text-slate-100 font-sans antialiased;
+    font-family: 'IBM Plex Sans', 'Plus Jakarta Sans', system-ui, sans-serif;
+    background-color: var(--canvas);
+    color: var(--text-base);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  code, .font-mono, pre, input.font-mono {
+    font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+    font-feature-settings: "tnum" 1;
   }
 }
 
 @layer components {
-  .glass-card {
-    @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-xl;
-  }
-  
-  .btn-primary {
-    @apply bg-electric hover:bg-blue-600 text-white font-medium py-2 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-blue-500/30;
-  }
-  
-  .btn-secondary {
-    @apply bg-white/10 hover:bg-white/20 text-white font-medium py-2 px-6 rounded-xl border border-white/10 transition-all duration-200;
+  /* Institutional panel surfaces */
+  .statutory-panel {
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
   }
 
-  .input-field {
-    @apply bg-navy-800 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-electric focus:ring-1 focus:ring-electric transition-all;
+  .statutory-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 0.625rem;
+    margin-bottom: 0.625rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .statutory-panel-title {
+    font-family: 'Plus Jakarta Sans', 'IBM Plex Sans', sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-bright);
+  }
+
+  .statutory-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 0.125rem 0.375rem;
+    border-radius: 2px;
+    border: 1px solid var(--border);
+  }
+
+  .statutory-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.5rem 0.875rem;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--text-bright);
+    background: var(--ashoka-blue);
+    border: 1px solid var(--ashoka-navy);
+    border-radius: 3px;
+    transition: background 0.15s ease;
+  }
+
+  .statutory-btn-primary:hover:not(:disabled) {
+    background: var(--ashoka-light);
+  }
+
+  .statutory-btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .statutory-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.4375rem 0.75rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: var(--surface-elevated);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .statutory-btn-secondary:hover:not(:disabled) {
+    border-color: var(--ashoka-blue);
+    color: var(--text-bright);
+  }
+
+  /* Measurement grid for evidence canvas */
+  .evidence-grid {
+    background-image:
+      linear-gradient(rgba(43, 61, 94, 0.35) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(43, 61, 94, 0.35) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  /* Tricolor authority stripe */
+  .tricolor-stripe {
+    height: 3px;
+    background: linear-gradient(
+      90deg,
+      #FF9933 0%,
+      #FF9933 33.33%,
+      #FFFFFF 33.33%,
+      #FFFFFF 66.66%,
+      #138808 66.66%,
+      #138808 100%
+    );
+  }
+
+  .saffron-accent-bar {
+    height: 2px;
+    background: var(--saffron-dark);
+  }
+
+  /* Tab navigation */
+  .statutory-tab {
+    flex: 1;
+    padding: 0.5rem 0.625rem;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--text-dim);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .statutory-tab:hover {
+    color: var(--text-muted);
+  }
+
+  .statutory-tab-active {
+    color: var(--text-bright);
+    border-bottom-color: var(--saffron);
+  }
+
+  /* Docket register selection */
+  .docket-row {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 0.625rem 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .docket-row:hover:not(:disabled) {
+    background: var(--surface-hover);
+    border-color: var(--border);
+  }
+
+  .docket-row-active {
+    background: var(--surface-elevated);
+    border-color: var(--ashoka-blue);
+    border-left: 3px solid var(--ashoka-blue);
+  }
+
+  /* Legal quote indent */
+  .legal-quote {
+    font-style: italic;
+    color: var(--text-legal);
+    padding-left: 0.75rem;
+    border-left: 2px solid var(--border);
+  }
+
+  /* Status chips */
+  .status-compliant {
+    color: var(--status-pass);
+    background: rgba(4, 120, 87, 0.12);
+    border: 1px solid rgba(4, 120, 87, 0.35);
+  }
+
+  .status-review {
+    color: var(--status-review);
+    background: rgba(180, 83, 9, 0.12);
+    border: 1px solid rgba(180, 83, 9, 0.35);
+  }
+
+  .status-breach {
+    color: var(--status-breach);
+    background: rgba(185, 28, 28, 0.12);
+    border: 1px solid rgba(185, 28, 28, 0.35);
   }
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #102a43;
-}
-::-webkit-scrollbar-thumb {
-  background: #334e68;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #486581;
+/* Scrollbars */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--canvas); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #3D5278; }
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }

@@ -1,14 +1,25 @@
 @echo off
-echo Starting LabelCheck Services...
+echo ==========================================
+echo  Legal Metrology Inspection Assistant
+echo  PROTOTYPE DEMO
+echo ==========================================
+echo.
+echo Starting services...
+echo.
 
-echo [1/3] Starting Python AI Microservice (Port 8000)...
-start "AI Service" cmd /k "cd ai-service && if not exist venv (echo Setting up virtual environment... && python -m venv venv && call venv\Scripts\activate && pip install -r requirements.txt) else (call venv\Scripts\activate) && uvicorn main:app --reload --port 8000"
+echo [1/2] Starting Backend (Port 3001)...
+start "LM-Backend" cmd /k "cd server && npm run dev"
 
-echo [2/3] Starting Node Backend (Port 5000)...
-start "Node Backend" cmd /k "cd server && node server.js"
+timeout /t 3 /nobreak > nul
 
-echo [3/3] Starting React Frontend (Port 5173)...
-start "React Frontend" cmd /k "cd client && npm run dev"
+echo [2/2] Starting Frontend (Port 5173)...
+start "LM-Frontend" cmd /k "cd client && npm run dev"
 
-echo All services launched in separate windows! 
-echo Frontend available at http://localhost:5173
+echo.
+echo ==========================================
+echo  Both services launched!
+echo  Frontend: http://localhost:5173
+echo  Backend:  http://localhost:3001
+echo ==========================================
+echo.
+pause

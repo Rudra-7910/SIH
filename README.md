@@ -1,62 +1,148 @@
-# LabelCheck
+# Legal Metrology Inspection Assistant
 
-**Smart India Hackathon 2026**
-Problem Statement 26034 (Ministry of Consumer Affairs)
+> **Prototype — Smart India Hackathon 2024 · Problem Statement SIH 26034**
+> AI-assisted statutory label verification for Legal Metrology Officers under the Packaged Commodities Rules, 2011.
 
-LabelCheck is a polyglot microservices application that scans photos of packaged commodities and checks them for compliance with India's Legal Metrology (Packaged Commodities) Rules, 2011.
+---
+
+## What It Does
+
+Field inspection officers photograph a packaged commodity. The system:
+
+1. **Runs OCR** to detect all text on the label (PaddleOCR deep learning engine or Tesseract.js)
+2. **Extracts mandatory declarations** — MRP, Net Quantity, Manufacturer, Date of Manufacture, Consumer Care, Country of Origin — mapped to their statutory rule reference (Rule 6, PCR 2011)
+3. **Checks each declaration** against a deterministic rule engine based on the Legal Metrology Act, 2009
+4. **Flags issues** for officer review with severity, rule citation, and confidence score
+5. **Generates inspection dossiers** — Form-IV style PDF report and show-cause notice
+
+The officer makes every final decision. AI assists detection, not adjudication.
+
+---
+
+## Quick Start
+
+**Requirements:** Node.js 18+
+
+```bash
+# 1. Install dependencies
+cd server && npm install
+cd ../client && npm install
+
+# 2. Start (Windows)
+cd ..
+start.bat
+
+# 3. Open
+# http://localhost:5173
+```
+
+**Manual start (two terminals):**
+
+```bash
+# Terminal 1 — API server (port 3001)
+cd server && npm run dev
+
+# Terminal 2 — Frontend (port 5173)
+cd client && npm run dev
+```
+
+No API keys, no database, no cloud services required. Runs fully offline.
+
+---
+
+## OCR Engines
+
+| Engine | How it works | When to use |
+|--------|-------------|-------------|
+| **PaddleOCR** (default) | PP-OCR deep neural network (DBNet + CRNN). Runs via local Python script. Better on real package photos. | Live camera / real image upload |
+| **Tesseract.js** | Runs entirely in Node.js, zero Python dependency. | Fallback, offline demo |
+| **Mock OCR** | Returns pre-built results for 4 demo scenarios. 100% predictable. | Hackathon judging demo |
+
+Switch engines from the dashboard header before uploading.
+
+---
+
+## Demo Scenarios
+
+| Scenario | What it demonstrates |
+|----------|---------------------|
+| ✅ Compliant Package | All 6 mandatory declarations detected at high confidence. All rules pass. |
+| ⚠️ Low OCR Confidence | MRP detected at 58% confidence — auto-flagged for officer review. |
+| 📷 Insufficient Coverage | Front-only photo. System requests additional view, does NOT claim MRP is absent. |
+| 🔴 Missing Declaration | 3 views submitted. Consumer care genuinely absent. Officer verification required. |
+
+---
 
 ## Architecture
 
-```text
-+-------------------+       +-------------------+       +-------------------+
-| React Frontend    | ----> | Node Backend      | ----> | Python AI Service |
-| (Vite, Tailwind)  | <---- | (Express, MongoDB)| <---- | (FastAPI, EasyOCR)|
-| Port 5173         |       | Port 5000         |       | Port 8000         |
-+-------------------+       +-------------------+       +-------------------+
+```
+Image Upload / Camera
+        ↓
+Image Preprocessing (sharp — resize, contrast normalisation, edge sharpening)
+        ↓
+OCR Engine  (PaddleOCR DL  /  Tesseract.js  /  Mock for demo)
+        ↓
+Field Extractor  (keyword matching + 40+ regex patterns per declaration type)
+        ↓
+Rule Engine  (deterministic — PASS / NEEDS_REVIEW / POTENTIAL_ISSUE)
+        ↓
+Officer Review  (confirm / correct / reject / request view / remark)
+        ↓
+Inspection Dossier PDF  (Form-IV format + audit log)
 ```
 
-- **Frontend**: React application for officer dashboard and image uploading.
-- **Backend**: Node.js API handling authentication, MongoDB persistence, and PDF report generation.
-- **AI Service**: Python FastAPI microservice dedicated to running EasyOCR and regex-based rule extraction.
+**Key principle:** The rule engine is entirely deterministic — no LLM, no hallucinations. Every finding has a rule ID, severity, and reason. OCR results carry confidence scores; anything below 70% is automatically flagged.
 
-## Setup Instructions
+---
 
-### Prerequisites
-- Node.js (v18+)
-- Python (v3.9+)
-- MongoDB running locally on port 27017
+## Project Structure
 
-### 1. Python AI Service
-```bash
-cd ai-service
-pip install -r requirements.txt
-# Start the service
-uvicorn main:app --reload --port 8000
+```
+SHI/
+├── client/                    # React 18 + Vite + TypeScript + Tailwind
+│   └── src/
+│       ├── components/        # UI components
+│       ├── pages/             # InspectionDashboard (main page)
+│       └── types/index.ts     # Shared types
+├── server/                    # Node.js + Express + TypeScript
+│   └── src/
+│       ├── ocr/               # OCR adapters (Mock / Tesseract / PaddleOCR)
+│       ├── extraction/        # Field extractor (regex + keyword matching)
+│       ├── rules/             # Rule engine + demo-rules.json
+│       ├── routes/            # API routes
+│       └── server.ts          # Entry point
+├── start.bat                  # One-click Windows startup
+└── start.sh                   # One-click Unix startup
 ```
 
-### 2. Node Backend
+---
+
+## Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `OCR_MODE` | `mock` | `mock` · `tesseract` · `paddle` |
+| `PORT` | `3001` | Backend API port |
+| `PADDLE_OCR_URL` | `http://localhost:8100` | PaddleOCR service endpoint |
+
+Copy `.env.example` to `.env` to customise.
+
+---
+
+## Deployment
+
 ```bash
+# Build full-stack (React + Express, single server)
 cd server
-npm install
-# Optional: Seed database with dummy data
-node seed.js
-# Start the server (uses node index.js or server.js)
-node server.js
+npm run build:full
+
+# Start production server
+npm start
+# Serves frontend + API on port 3001
 ```
 
-### 3. React Frontend
-```bash
-cd client
-npm install
-# Start dev server
-npm run dev
-```
+One-command Docker build and Railway deployment are also supported. See the deployment section in project docs.
 
-### Quick Start (Windows)
-Run `start.bat` from the root directory to launch all three services concurrently in separate terminal windows.
+---
 
-## Known Limitations & Scope
-- **Font Size Estimation**: True mm measurement from a photo requires a reference object (like a coin or card). The current font size feature provides an estimate based on pixel-to-mm ratio from a reference bounding box.
-- **E-Commerce Scoping**: Live scraping of e-commerce platforms is out of scope for this MVP to avoid Terms of Service violations. Future integration could use official APIs.
-- **Rule Coverage**: This MVP focuses exclusively on **retail pre-packaged FMCG goods**. Wholesale, imported, and variable packages require different rule subsets.
-- **OCR Accuracy**: Depends heavily on lighting, glare, and camera quality. The system uses EasyOCR for its superior mixed Hindi-English support.
+> **Disclaimer:** Prototype for SIH evaluation. Not a production legal enforcement system. AI assists detection — the authorised officer makes all final decisions. Demo rules are illustrative and do not constitute legal advice.

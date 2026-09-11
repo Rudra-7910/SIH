@@ -1,24 +1,29 @@
 {
-  "name": "server",
+  "name": "lm-inspection-server",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Legal Metrology Inspection Assistant — Backend API (Prototype)",
+  "main": "src/server.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "npx tsx --watch src/server.ts",
+    "start": "npx tsx src/server.ts",
+    "build:client": "cd ../client && npm install && npm run build",
+    "build:full": "npm run build:client && node -e \"const fs=require('fs');const path=require('path');fs.cpSync(path.join(__dirname,'../client/dist'),path.join(__dirname,'public'),{recursive:true});console.log('✓ Client build copied to server/public');\"",
+    "deploy": "npm run build:full && npm start"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
-    "axios": "^1.19.0",
-    "bcryptjs": "^3.0.3",
-    "cors": "^2.8.6",
-    "dotenv": "^17.4.2",
-    "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.9.4",
-    "multer": "^2.2.0",
-    "pdf-lib": "^1.17.1"
+    "cors": "^2.8.5",
+    "express": "^4.21.0",
+    "multer": "^1.4.5-lts.1",
+    "sharp": "^0.33.5",
+    "tesseract.js": "^7.0.0",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/multer": "^1.4.12",
+    "@types/uuid": "^10.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
   }
 }

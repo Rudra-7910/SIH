@@ -6,6 +6,18 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
+# Generated client build (built at deploy time via npm run build:full)
+server/public/
+
+# ─── Internal / AI Agent files — not for public repo ──────────────────────────
+# These are development tools used internally, not relevant to project reviewers
+AGENT_RULES.md
+AI_CONTEXT.md
+MASTER_COMPLETION_PROMPT.md
+SHARING_AND_SETUP.md
+.cursorrules
+.docs/
+
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 

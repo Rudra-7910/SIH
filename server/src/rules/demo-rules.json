@@ -1,0 +1,145 @@
+{
+  "_comment": "DEMO RULES ONLY — These are simplified demonstration rules inspired by the Legal Metrology (Packaged Commodities) Rules. They are NOT a complete or authoritative legal database. For actual enforcement, refer to the official gazette notifications.",
+  "_version": "1.0-demo",
+  "_lastUpdated": "2026-01-01",
+  "rules": [
+    {
+      "ruleId": "DEMO-MRP-001",
+      "field": "mrp",
+      "required": true,
+      "category": "packaged_commodity",
+      "severity": "HIGH",
+      "description": "Maximum Retail Price (MRP) inclusive of all taxes must be declared on the package",
+      "version": "1.0",
+      "effectiveFrom": "2026-01-01",
+      "isDemo": true,
+      "validationPattern": "\\d+",
+      "validationDescription": "MRP must contain a numeric value"
+    },
+    {
+      "ruleId": "DEMO-MRP-002",
+      "field": "mrp",
+      "required": false,
+      "category": "packaged_commodity",
+      "severity": "MEDIUM",
+      "description": "MRP declaration should indicate 'inclusive of all taxes'",
+      "version": "1.0",
+      "effectiveFrom": "2026-01-01",
+      "isDemo": true,
+      "validationPattern": "(?i)(incl|inclusive|all\\s*tax)",
+      "validationDescription": "MRP label should mention 'inclusive of all taxes'"
+    },
+    {
+      "ruleId": "DEMO-NETQTY-001",
+      "field": "net_quantity",
+      "required": true,
+      "category": "packaged_commodity",
+      "severity": "HIGH",
+      "description": "Net quantity or net weight must be declared in standard units",
+      "version": "1.0",
+      "effectiveFrom": "2026-01-01",
+      "isDemo": true,
+      "validationPattern": "\\d+\\s*(g|gm|kg|ml|l|ltr|litre)",
+      "validationDescription": "Net quantity must include a numeric value with a standard unit (g, kg, ml, l, etc.)"
+    },
+    {
+      "ruleId": "DEMO-MFG-001",
+      "field": "manufacturer",
+      "required": true,
+      "category": "packaged_commodity",
+      "severity": "HIGH",
+      "description": "Name and complete address of the manufacturer or packer must be declared",
+      "version": "1.0",
+      "effectiveFrom": "2026-01-01",
+      "isDemo": true
+    },
+    {
+      "ruleId": "DEMO-CARE-001",
+      "field": "consumer_care",
+      "required": true,
+      "category": "packaged_commodity",
+      "severity": "MEDIUM",
+      "description": "Consumer care contact details (phone/email/address) must be provided",
+      "version": "1.0",
+      "effectiveFrom": "2026-01-01",
+      "isDemo": true
+    },
+    {
+      "ruleId": "DEMO-MFGDATE-001",
+      "field": "date_of_manufacture",
+      "required": true,
+      "category": "packaged_commodity",
+      "severity": "MEDIUM",
+      "description": "Month and year of manufacture (or packing) must be declared",
+      "version": "1.0",
+      "effectiveFrom": "2026-01-01",
+      "isDemo": true
+    },
+    {
+      "ruleId": "DEMO-BESTBEFORE-001",
+      "field": "best_before",
+      "required": false,
+      "category": "food_commodity",
+      "severity": "MEDIUM",
+      "description": "Best before or use-by date should be declared for consumable products",
+      "version": "1.0",
+      "effectiveFrom": "2026-01-01",
+      "isDemo": true
+    },
+    {
+      "ruleId": "DEMO-ORIGIN-001",
+      "field": "country_of_origin",
+      "required": false,
+      "category": "packaged_commodity",
+      "severity": "LOW",
+      "description": "Country of origin should be declared on the package",
+      "version": "1.0",
+      "effectiveFrom": "2026-01-01",
+      "isDemo": true
+    },
+    {
+      "ruleId": "DEMO-UNIT-SPELL-001",
+      "field": "net_quantity",
+      "required": false,
+      "category": "packaged_commodity",
+      "severity": "MEDIUM",
+      "description": "Standard SI unit symbol must be used without colloquial plurals (Rule 12 — use 'g' not 'gms', 'kg' not 'kgs', 'ml' not 'ML.')",
+      "version": "1.0",
+      "effectiveFrom": "2026-01-01",
+      "isDemo": true
+    },
+    {
+      "ruleId": "DEMO-CARE-MULTICHANNEL-001",
+      "field": "consumer_care",
+      "required": false,
+      "category": "packaged_commodity",
+      "severity": "LOW",
+      "description": "Consumer care declaration should provide both a telephone helpline and digital address (email or website)",
+      "version": "1.0",
+      "effectiveFrom": "2026-01-01",
+      "isDemo": true
+    },
+    {
+      "ruleId": "DEMO-USP-001",
+      "field": "mrp",
+      "required": false,
+      "category": "packaged_commodity",
+      "severity": "MEDIUM",
+      "description": "Unit Sale Price (USP per g/ml/kg) required on packages where quantity exceeds standard single unit (Rule 6(1)(e))",
+      "version": "1.0",
+      "effectiveFrom": "2026-01-01",
+      "isDemo": true
+    },
+    {
+      "ruleId": "DEMO-FONTHEIGHT-001",
+      "field": "mrp",
+      "required": false,
+      "category": "packaged_commodity",
+      "severity": "MEDIUM",
+      "description": "Mandatory numeral height proportion check according to Schedule II of Legal Metrology Rules",
+      "version": "1.0",
+      "effectiveFrom": "2026-01-01",
+      "isDemo": true
+    }
+  ]
+}
