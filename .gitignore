@@ -18,6 +18,11 @@ SHARING_AND_SETUP.md
 .cursorrules
 .docs/
 
+# ─── Runtime / generated data — not for version control ───────────────────────
+server/uploads/
+server/data/
+server/eng.traineddata
+
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
