@@ -1,257 +1,380 @@
-/* ─── LMED-Inspector v2.4 — Statutory Design Tokens ─────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap');
+/* ─── LME-CC v3.0 — Indian Government Portal Design System ─────────────────── */
+/* Reference: GSTN, MCA21, GeM v3, NIC-built portals                           */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  /* Executive National Canvas */
-  --canvas:           #0B132B;
-  --canvas-alt:       #0F172A;
-  --surface:          #0F172A;
-  --surface-card:     #162238;
-  --surface-elevated: #1A2744;
-  --surface-hover:    #1E3050;
+  /* ── Page & Surface ────────────────────────────────────────────────────── */
+  --gov-page:          #F4F6F9;
+  --gov-surface:       #FFFFFF;
+  --gov-surface-alt:   #F0F4F8;
+  --gov-border:        #D1D9E3;
+  --gov-border-strong: #9AADBE;
 
-  --border:           #2B3D5E;
-  --border-subtle:    #243352;
-  --border-focus:     #1E3A8A;
+  /* ── Authority Navy (consistent across NIC/GoI portals) ────────────────── */
+  --gov-navy:          #1A3A5C;
+  --gov-navy-dark:     #0F2540;
+  --gov-navy-light:    #2558A0;
+  --gov-navy-bg:       #EBF3FB;
 
-  /* State Authority */
-  --ashoka-navy:      #1C3D5A;
-  --ashoka-blue:      #1E3A8A;
-  --ashoka-light:     #2563EB;
-  --saffron:          #D97706;
-  --saffron-dark:     #B45309;
+  /* ── Saffron — constitutional, statutory alerts ONLY ───────────────────── */
+  --gov-saffron:       #B45309;
+  --gov-saffron-text:  #92400E;
+  --gov-saffron-bg:    #FEF3C7;
+  --gov-saffron-border:#D97706;
 
-  /* Statutory Status Ledger */
-  --status-pass:      #047857;
-  --status-pass-bg:   #064E3B;
-  --status-pass-light:#ECFDF5;
-  --status-review:    #B45309;
-  --status-review-bg: #FFFBEB;
-  --status-breach:    #B91C1C;
-  --status-breach-bg: #991B1B;
-  --status-breach-light: #FEF2F2;
+  /* ── Statutory Status — functional, never decorative ───────────────────── */
+  --gov-pass:          #15803D;
+  --gov-pass-bg:       #F0FDF4;
+  --gov-pass-border:   #86EFAC;
 
-  /* Typography */
-  --text-base:        #E2E8F0;
-  --text-muted:       #94A3B8;
-  --text-dim:         #64748B;
-  --text-bright:      #F8FAFC;
-  --text-legal:       #CBD5E1;
+  --gov-review:        #92400E;
+  --gov-review-bg:     #FFFBEB;
+  --gov-review-border: #FCD34D;
+
+  --gov-breach:        #991B1B;
+  --gov-breach-bg:     #FEF2F2;
+  --gov-breach-border: #FECACA;
+
+  /* ── Typography hierarchy ───────────────────────────────────────────────── */
+  --gov-text-primary:  #1A202C;
+  --gov-text-secondary:#4A5568;
+  --gov-text-muted:    #718096;
+  --gov-text-inverse:  #FFFFFF;
+  --gov-text-navy:     #1A3A5C;
 }
 
 @layer base {
   body {
-    font-family: 'IBM Plex Sans', 'Plus Jakarta Sans', system-ui, sans-serif;
-    background-color: var(--canvas);
-    color: var(--text-base);
+    font-family: 'IBM Plex Sans', 'Noto Sans', Arial, sans-serif;
+    background-color: var(--gov-page);
+    color: var(--gov-text-primary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-size: 14px;
+    line-height: 1.5;
   }
 
-  code, .font-mono, pre, input.font-mono {
-    font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  code, .font-mono, pre, input.font-mono, .tabular-nums {
+    font-family: 'JetBrains Mono', Consolas, monospace;
+    font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum" 1;
+  }
+
+  * {
+    box-sizing: border-box;
   }
 }
 
 @layer components {
-  /* Institutional panel surfaces */
-  .statutory-panel {
-    background: var(--surface-card);
-    border: 1px solid var(--border);
-    border-radius: 4px;
+
+  /* ── Tricolor constitutional stripe — ONLY decorative element permitted ── */
+  .tricolor-stripe {
+    height: 4px;
+    background: linear-gradient(
+      90deg,
+      #FF9933 0%, #FF9933 33.33%,
+      #FFFFFF 33.33%, #FFFFFF 66.66%,
+      #138808 66.66%, #138808 100%
+    );
   }
 
-  .statutory-panel-header {
+  /* ── Panel / Card ────────────────────────────────────────────────────────── */
+  .gov-panel {
+    background: var(--gov-surface);
+    border: 1px solid var(--gov-border);
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07);
+  }
+
+  .gov-panel-header {
+    background: var(--gov-surface-alt);
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--gov-border);
+    border-radius: 4px 4px 0 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-bottom: 0.625rem;
-    margin-bottom: 0.625rem;
-    border-bottom: 1px solid var(--border);
   }
 
-  .statutory-panel-title {
-    font-family: 'Plus Jakarta Sans', 'IBM Plex Sans', sans-serif;
-    font-size: 0.6875rem;
+  .gov-panel-title {
+    font-size: 11px;
     font-weight: 600;
-    letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--text-bright);
+    letter-spacing: 0.06em;
+    color: var(--gov-text-navy);
   }
 
-  .statutory-badge {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.625rem;
+  .gov-panel-cite {
+    font-size: 10px;
+    font-style: italic;
+    color: var(--gov-text-muted);
+  }
+
+  /* ── Tables ──────────────────────────────────────────────────────────────── */
+  .gov-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .gov-table th {
+    background: var(--gov-surface-alt);
+    color: var(--gov-text-secondary);
+    font-size: 11px;
     font-weight: 600;
-    letter-spacing: 0.04em;
-    padding: 0.125rem 0.375rem;
-    border-radius: 2px;
-    border: 1px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 2px solid var(--gov-border-strong);
+    white-space: nowrap;
   }
 
-  .statutory-btn-primary {
+  .gov-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--gov-border);
+    color: var(--gov-text-primary);
+    vertical-align: middle;
+  }
+
+  .gov-table tr:nth-child(even) td {
+    background: var(--gov-surface-alt);
+  }
+
+  .gov-table tr:hover td {
+    background: var(--gov-navy-bg);
+    cursor: pointer;
+  }
+
+  .gov-table tr.row-highlighted td {
+    background: var(--gov-navy-bg);
+    border-left: 3px solid var(--gov-navy);
+  }
+
+  /* ── Buttons ─────────────────────────────────────────────────────────────── */
+  .gov-btn-primary {
     display: inline-flex;
     align-items: center;
-    gap: 0.375rem;
-    padding: 0.5rem 0.875rem;
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 0.75rem;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--gov-navy);
+    color: var(--gov-text-inverse);
+    border: 1px solid var(--gov-navy-dark);
+    border-radius: 4px;
+    font-size: 13px;
     font-weight: 600;
-    letter-spacing: 0.02em;
-    color: var(--text-bright);
-    background: var(--ashoka-blue);
-    border: 1px solid var(--ashoka-navy);
-    border-radius: 3px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    cursor: pointer;
     transition: background 0.15s ease;
+    white-space: nowrap;
   }
 
-  .statutory-btn-primary:hover:not(:disabled) {
-    background: var(--ashoka-light);
+  .gov-btn-primary:hover:not(:disabled) {
+    background: var(--gov-navy-light);
   }
 
-  .statutory-btn-primary:disabled {
+  .gov-btn-primary:disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .statutory-btn-secondary {
+  .gov-btn-secondary {
     display: inline-flex;
     align-items: center;
-    gap: 0.375rem;
-    padding: 0.4375rem 0.75rem;
-    font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    background: var(--surface-elevated);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    transition: border-color 0.15s ease, color 0.15s ease;
-  }
-
-  .statutory-btn-secondary:hover:not(:disabled) {
-    border-color: var(--ashoka-blue);
-    color: var(--text-bright);
-  }
-
-  /* Measurement grid for evidence canvas */
-  .evidence-grid {
-    background-image:
-      linear-gradient(rgba(43, 61, 94, 0.35) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(43, 61, 94, 0.35) 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-
-  /* Tricolor authority stripe */
-  .tricolor-stripe {
-    height: 3px;
-    background: linear-gradient(
-      90deg,
-      #FF9933 0%,
-      #FF9933 33.33%,
-      #FFFFFF 33.33%,
-      #FFFFFF 66.66%,
-      #138808 66.66%,
-      #138808 100%
-    );
-  }
-
-  .saffron-accent-bar {
-    height: 2px;
-    background: var(--saffron-dark);
-  }
-
-  /* Tab navigation */
-  .statutory-tab {
-    flex: 1;
-    padding: 0.5rem 0.625rem;
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    text-align: center;
-    color: var(--text-dim);
-    background: transparent;
-    border: none;
-    border-bottom: 2px solid transparent;
-    cursor: pointer;
-    transition: color 0.15s ease, border-color 0.15s ease;
-  }
-
-  .statutory-tab:hover {
-    color: var(--text-muted);
-  }
-
-  .statutory-tab-active {
-    color: var(--text-bright);
-    border-bottom-color: var(--saffron);
-  }
-
-  /* Docket register selection */
-  .docket-row {
-    display: block;
-    width: 100%;
-    text-align: left;
-    padding: 0.625rem 0.75rem;
-    background: var(--surface);
-    border: 1px solid var(--border-subtle);
-    border-radius: 3px;
+    gap: 6px;
+    padding: 7px 14px;
+    background: var(--gov-surface);
+    color: var(--gov-text-primary);
+    border: 1px solid var(--gov-border-strong);
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
     cursor: pointer;
     transition: border-color 0.15s ease, background 0.15s ease;
   }
 
-  .docket-row:hover:not(:disabled) {
-    background: var(--surface-hover);
-    border-color: var(--border);
+  .gov-btn-secondary:hover:not(:disabled) {
+    background: var(--gov-surface-alt);
+    border-color: var(--gov-navy);
+    color: var(--gov-text-navy);
   }
 
-  .docket-row-active {
-    background: var(--surface-elevated);
-    border-color: var(--ashoka-blue);
-    border-left: 3px solid var(--ashoka-blue);
+  .gov-btn-danger {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    background: var(--gov-surface);
+    color: var(--gov-breach);
+    border: 1px solid var(--gov-breach-border);
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s ease;
   }
 
-  /* Legal quote indent */
-  .legal-quote {
-    font-style: italic;
-    color: var(--text-legal);
-    padding-left: 0.75rem;
-    border-left: 2px solid var(--border);
+  .gov-btn-danger:hover:not(:disabled) {
+    background: var(--gov-breach-bg);
   }
 
-  /* Status chips */
-  .status-compliant {
-    color: var(--status-pass);
-    background: rgba(4, 120, 87, 0.12);
-    border: 1px solid rgba(4, 120, 87, 0.35);
+  .gov-btn-warning {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    background: var(--gov-surface);
+    color: var(--gov-review);
+    border: 1px solid var(--gov-review-border);
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s ease;
   }
 
-  .status-review {
-    color: var(--status-review);
-    background: rgba(180, 83, 9, 0.12);
-    border: 1px solid rgba(180, 83, 9, 0.35);
+  .gov-btn-warning:hover:not(:disabled) {
+    background: var(--gov-review-bg);
   }
 
-  .status-breach {
-    color: var(--status-breach);
-    background: rgba(185, 28, 28, 0.12);
-    border: 1px solid rgba(185, 28, 28, 0.35);
+  /* ── Status Badges ───────────────────────────────────────────────────────── */
+  .gov-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    font-family: 'IBM Plex Sans', sans-serif;
+  }
+
+  .gov-badge-pass {
+    color: var(--gov-pass);
+    background: var(--gov-pass-bg);
+    border: 1px solid var(--gov-pass-border);
+  }
+
+  .gov-badge-review {
+    color: var(--gov-review);
+    background: var(--gov-review-bg);
+    border: 1px solid var(--gov-review-border);
+  }
+
+  .gov-badge-breach {
+    color: var(--gov-breach);
+    background: var(--gov-breach-bg);
+    border: 1px solid var(--gov-breach-border);
+  }
+
+  .gov-badge-navy {
+    color: var(--gov-text-inverse);
+    background: var(--gov-navy);
+    border: 1px solid var(--gov-navy-dark);
+  }
+
+  .gov-badge-neutral {
+    color: var(--gov-text-secondary);
+    background: var(--gov-surface-alt);
+    border: 1px solid var(--gov-border);
+  }
+
+  /* ── Form inputs ─────────────────────────────────────────────────────────── */
+  .gov-input {
+    width: 100%;
+    padding: 7px 10px;
+    background: var(--gov-surface);
+    border: 1px solid var(--gov-border-strong);
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: var(--gov-text-primary);
+    transition: border-color 0.15s ease;
+    outline: none;
+  }
+
+  .gov-input:focus {
+    border-color: var(--gov-navy);
+    box-shadow: 0 0 0 2px rgba(26, 58, 92, 0.12);
+  }
+
+  /* ── Docket row (scenario selector) ─────────────────────────────────────── */
+  .gov-docket-row {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 10px 14px;
+    background: var(--gov-surface);
+    border: 1px solid var(--gov-border);
+    border-left: 3px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .gov-docket-row:hover:not(:disabled) {
+    background: var(--gov-navy-bg);
+    border-color: var(--gov-border-strong);
+    border-left-color: var(--gov-navy-light);
+  }
+
+  .gov-docket-row-active {
+    background: var(--gov-navy-bg);
+    border-color: var(--gov-navy);
+    border-left-color: var(--gov-navy);
+  }
+
+  /* ── Section / panel label ───────────────────────────────────────────────── */
+  .gov-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--gov-text-muted);
+  }
+
+  /* ── Verdict banner ──────────────────────────────────────────────────────── */
+  .gov-verdict-compliant {
+    background: var(--gov-pass-bg);
+    border: 1px solid var(--gov-pass-border);
+    border-left: 4px solid var(--gov-pass);
+    border-radius: 4px;
+    color: var(--gov-pass);
+  }
+
+  .gov-verdict-review {
+    background: var(--gov-review-bg);
+    border: 1px solid var(--gov-review-border);
+    border-left: 4px solid var(--gov-saffron-border);
+    border-radius: 4px;
+    color: var(--gov-review);
+  }
+
+  .gov-verdict-breach {
+    background: var(--gov-breach-bg);
+    border: 1px solid var(--gov-breach-border);
+    border-left: 4px solid var(--gov-breach);
+    border-radius: 4px;
+    color: var(--gov-breach);
+  }
+
+  /* ── Confidence bar ──────────────────────────────────────────────────────── */
+  .gov-conf-bar {
+    height: 3px;
+    background: var(--gov-border);
+    border-radius: 2px;
+    overflow: hidden;
   }
 }
 
-/* Scrollbars */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: var(--canvas); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: #3D5278; }
-
-.tabular-nums {
-  font-variant-numeric: tabular-nums;
-}
+/* ── Scrollbar styling ────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--gov-page); }
+::-webkit-scrollbar-thumb { background: var(--gov-border-strong); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gov-text-muted); }
