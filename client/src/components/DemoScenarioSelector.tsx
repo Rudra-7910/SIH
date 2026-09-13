@@ -1,6 +1,6 @@
 import React from 'react';
 import { DemoScenario } from '../types';
-import { CheckCircle2, AlertTriangle, Camera, XCircle, Sparkles } from 'lucide-react';
+import { CheckCircle2, AlertTriangle, Camera, XCircle, FlaskConical } from 'lucide-react';
 
 interface Props {
   scenarios: DemoScenario[];
@@ -9,38 +9,41 @@ interface Props {
   loading: boolean;
 }
 
-const SIMPLE_STATUS: Record<string, { label: string; hint: string; severity: 'ok' | 'bad' | 'warn' | 'info'; icon: React.ReactNode }> = {
+const SCENARIO_META: Record<string, {
+  label: string;
+  badge: string;
+  badgeCls: string;
+  icon: React.ReactNode;
+  caseRef: string;
+}> = {
   good_package: {
-    label: 'All good',
-    hint: 'Everything on the label is correct',
-    severity: 'ok',
-    icon: <CheckCircle2 className="w-4 h-4 text-lmed-pass" />,
+    label: 'Compliant',
+    badge: 'COMPLIANT',
+    badgeCls: 'gov-badge-pass',
+    icon: <CheckCircle2 style={{ width: 15, height: 15, color: 'var(--gov-pass)' }} />,
+    caseRef: 'CAS/2024/LM/0481',
   },
   missing_declaration: {
-    label: 'Missing info',
-    hint: 'Important details like MRP are missing',
-    severity: 'bad',
-    icon: <XCircle className="w-4 h-4 text-lmed-breach" />,
+    label: 'Breach',
+    badge: 'POTENTIAL BREACH',
+    badgeCls: 'gov-badge-breach',
+    icon: <XCircle style={{ width: 15, height: 15, color: 'var(--gov-breach)' }} />,
+    caseRef: 'CAS/2024/LM/0484',
   },
   low_confidence: {
-    label: 'Hard to read',
-    hint: 'Photo quality is poor — needs manual check',
-    severity: 'warn',
-    icon: <AlertTriangle className="w-4 h-4 text-lmed-review" />,
+    label: 'Review',
+    badge: 'REVIEW REQ.',
+    badgeCls: 'gov-badge-review',
+    icon: <AlertTriangle style={{ width: 15, height: 15, color: 'var(--gov-saffron-border)' }} />,
+    caseRef: 'CAS/2024/LM/0482',
   },
   insufficient_coverage: {
-    label: 'More photos needed',
-    hint: 'Take photos of other sides of the package',
-    severity: 'info',
-    icon: <Camera className="w-4 h-4 text-slate-400" />,
+    label: 'Incomplete',
+    badge: 'ADD. VIEW REQ.',
+    badgeCls: 'gov-badge-neutral',
+    icon: <Camera style={{ width: 15, height: 15, color: 'var(--gov-text-muted)' }} />,
+    caseRef: 'CAS/2024/LM/0483',
   },
-};
-
-const badgeClass = {
-  ok: 'status-compliant',
-  bad: 'status-breach',
-  warn: 'status-review',
-  info: 'statutory-badge text-slate-400',
 };
 
 export const DemoScenarioSelector: React.FC<Props> = ({
@@ -50,64 +53,61 @@ export const DemoScenarioSelector: React.FC<Props> = ({
   loading,
 }) => {
   return (
-    <div className="statutory-panel p-3">
-      <div className="mb-2">
-        <div className="flex items-center gap-2 mb-1">
-          <Sparkles className="w-4 h-4 text-lmed-saffron" />
-          <h3 className="text-sm font-display font-semibold text-slate-100">
-            Step 1 — Try a sample
-          </h3>
+    <div className="gov-panel">
+      <div className="gov-panel-header">
+        <span className="gov-panel-title">Demo Case Dockets</span>
+        <span className="gov-panel-cite">Select a scenario to inspect</span>
+      </div>
+
+      <div style={{ padding: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 8px 10px', borderBottom: '1px solid var(--gov-border)', marginBottom: 6 }}>
+          <FlaskConical style={{ width: 14, height: 14, color: 'var(--gov-text-muted)', flexShrink: 0 }} />
+          <p style={{ fontSize: 11, color: 'var(--gov-text-muted)', lineHeight: 1.4 }}>
+            No upload needed — select any case file below to see how the tool works
+          </p>
         </div>
-        <p className="text-xs text-slate-400 leading-relaxed">
-          New here? Tap any example below to see how the tool works. No real upload needed.
-        </p>
-      </div>
 
-      <div className="space-y-2">
-        {scenarios.map((s) => {
-          const isActive = activeScenarioId === s.id;
-          const status = SIMPLE_STATUS[s.id] || {
-            label: 'Example',
-            hint: s.description,
-            severity: 'info' as const,
-            icon: <Sparkles className="w-4 h-4 text-slate-400" />,
-          };
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          {scenarios.map((s) => {
+            const isActive = activeScenarioId === s.id;
+            const meta = SCENARIO_META[s.id] || {
+              label: 'Demo',
+              badge: 'DEMO',
+              badgeCls: 'gov-badge-neutral',
+              icon: <FlaskConical style={{ width: 15, height: 15, color: 'var(--gov-text-muted)' }} />,
+              caseRef: 'CAS/2024/LM/0000',
+            };
 
-          return (
-            <button
-              key={s.id}
-              onClick={() => onSelect(s)}
-              disabled={loading}
-              className={`w-full text-left p-3 rounded-sm border transition-all ${
-                isActive
-                  ? 'border-lmed-blue bg-lmed-blue/10 ring-1 ring-lmed-blue/30'
-                  : 'border-lmed-border bg-canvas-alt hover:border-slate-500 hover:bg-lmed-elevated/40'
-              } ${loading ? 'opacity-50 cursor-wait' : 'cursor-pointer'}`}
-            >
-              <div className="flex items-start gap-3">
-                <div className="mt-0.5 shrink-0">{status.icon}</div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center justify-between gap-2 mb-0.5">
-                    <p className="text-sm font-semibold text-slate-100">{s.name}</p>
-                    <span className={`statutory-badge shrink-0 text-[10px] ${badgeClass[status.severity]}`}>
-                      {status.label}
-                    </span>
+            return (
+              <button
+                key={s.id}
+                onClick={() => onSelect(s)}
+                disabled={loading}
+                className={`gov-docket-row ${isActive ? 'gov-docket-row-active' : ''}`}
+                style={{ opacity: loading ? 0.55 : 1, cursor: loading ? 'wait' : 'pointer' }}
+              >
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                  <div style={{ marginTop: 2, flexShrink: 0 }}>{meta.icon}</div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 2 }}>
+                      <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--gov-text-primary)' }}>{s.name}</p>
+                      <span className={`gov-badge ${meta.badgeCls}`} style={{ flexShrink: 0 }}>{meta.badge}</span>
+                    </div>
+                    <p style={{ fontSize: 10, fontFamily: 'JetBrains Mono', color: 'var(--gov-text-muted)', marginBottom: 2 }}>{meta.caseRef}</p>
+                    <p style={{ fontSize: 11, color: 'var(--gov-text-secondary)', lineHeight: 1.4 }}>{s.description}</p>
                   </div>
-                  <p className="text-xs text-slate-400 leading-snug">
-                    {s.description || status.hint}
-                  </p>
                 </div>
-              </div>
-            </button>
-          );
-        })}
-      </div>
+              </button>
+            );
+          })}
+        </div>
 
-      {loading && (
-        <p className="text-xs text-lmed-saffron mt-2 text-center animate-pulse">
-          Loading sample… please wait
-        </p>
-      )}
+        {loading && (
+          <p style={{ fontSize: 11, color: 'var(--gov-saffron)', textAlign: 'center', padding: '8px 0', fontStyle: 'italic' }}>
+            Loading scenario…
+          </p>
+        )}
+      </div>
     </div>
   );
 };
