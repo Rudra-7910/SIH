@@ -7,45 +7,54 @@ interface Props {
 }
 
 const FRIENDLY: Record<string, string> = {
-  'Image Preprocessing': 'Preparing your photo…',
-  'OCR Text Detection': 'Reading text on the label…',
-  'Declaration Extraction': 'Finding MRP, quantity, dates…',
-  'Regulatory Check': 'Checking legal requirements…',
+  'Image Preprocessing':   'Preprocessing photograph…',
+  'OCR Text Detection':    'Running OCR on label…',
+  'Declaration Extraction':'Extracting statutory declarations…',
+  'Regulatory Check':      'Checking against Rule 6, PCR 2011…',
 };
 
 export const ProcessingStatus: React.FC<Props> = ({ steps }) => {
   if (steps.length === 0) return null;
 
   const current = steps.find((s) => s.status === 'processing');
-  const allDone = steps.every((s) => s.status === 'complete');
+  const allDone  = steps.every((s) => s.status === 'complete');
 
   return (
-    <div className="statutory-panel px-3 py-2.5 shrink-0">
-      <div className="flex items-center gap-2">
-        {!allDone && <Loader2 className="w-4 h-4 text-lmed-saffron animate-spin shrink-0" />}
-        {allDone && <Check className="w-4 h-4 text-lmed-pass shrink-0" />}
-        <div>
-          <p className="text-sm font-medium text-slate-200">
-            {allDone ? 'Done! See results on the right →' : (current ? FRIENDLY[current.step] || current.step : 'Working…')}
-          </p>
-          {!allDone && (
-            <p className="text-xs text-slate-500">This usually takes a few seconds</p>
-          )}
-        </div>
-      </div>
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: 12,
+      padding: '10px 16px',
+      background: allDone ? 'var(--gov-pass-bg)' : 'var(--gov-navy-bg)',
+      borderBottom: `1px solid ${allDone ? 'var(--gov-pass-border)' : 'var(--gov-border)'}`,
+    }}>
+      {!allDone && <Loader2 style={{ width: 15, height: 15, color: 'var(--gov-navy)', flexShrink: 0 }} className="animate-spin" />}
+      {allDone  && <Check   style={{ width: 15, height: 15, color: 'var(--gov-pass)',  flexShrink: 0 }} />}
 
-      <div className="flex gap-1 mt-2">
-        {steps.map((step, i) => (
-          <div
-            key={i}
-            className={`flex-1 h-1 rounded-full ${
-              step.status === 'complete' ? 'bg-lmed-pass' :
-              step.status === 'processing' ? 'bg-lmed-saffron animate-pulse' :
-              'bg-lmed-border'
-            }`}
-            title={FRIENDLY[step.step] || step.step}
-          />
-        ))}
+      <div style={{ flex: 1 }}>
+        <p style={{ fontSize: 12, fontWeight: 600, color: allDone ? 'var(--gov-pass)' : 'var(--gov-navy)' }}>
+          {allDone ? 'Processing complete — see results below' : (current ? FRIENDLY[current.step] || current.step : 'Processing…')}
+        </p>
+
+        {/* Step progress dots */}
+        <div style={{ display: 'flex', gap: 4, marginTop: 6 }}>
+          {steps.map((step, i) => (
+            <div
+              key={i}
+              title={FRIENDLY[step.step] || step.step}
+              style={{
+                flex: 1,
+                height: 3,
+                borderRadius: 2,
+                background:
+                  step.status === 'complete'   ? 'var(--gov-pass)' :
+                  step.status === 'processing' ? 'var(--gov-navy)' :
+                  'var(--gov-border)',
+                transition: 'background 0.3s ease',
+              }}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
