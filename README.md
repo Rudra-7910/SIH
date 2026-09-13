@@ -1,6 +1,6 @@
-# ⚖️ SHI — Legal Metrology Inspection Assistant
+# ⚖️ SIH — Legal Metrology Inspection Assistant
 
-> **Smart India Hackathon 2024 · Problem Statement SIH 26034**
+> **Smart India Hackathon 2026 · Problem Statement SIH 26034**
 > AI-powered statutory label verification for Legal Metrology Officers under the **Packaged Commodities Rules, 2011**.
 
 ![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?logo=node.js&logoColor=white)
