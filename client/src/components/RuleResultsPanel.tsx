@@ -10,10 +10,10 @@ interface Props {
 export const RuleResultsPanel: React.FC<Props> = ({ results, onReviewClick }) => {
   if (results.length === 0) {
     return (
-      <div className="p-6 text-center">
-        <Gavel className="w-8 h-8 mx-auto mb-2 text-slate-600" />
-        <p className="text-sm font-medium text-slate-400">No results yet</p>
-        <p className="text-xs text-slate-500 mt-1">Upload a photo to run the compliance check</p>
+      <div style={{ padding: 32, textAlign: 'center' }}>
+        <Gavel style={{ width: 32, height: 32, margin: '0 auto 8px', color: 'var(--gov-border-strong)' }} />
+        <p style={{ fontSize: 13, fontWeight: 500, color: 'var(--gov-text-secondary)' }}>No compliance check yet</p>
+        <p style={{ fontSize: 12, color: 'var(--gov-text-muted)', marginTop: 4 }}>Upload a photo to run the statutory check</p>
       </div>
     );
   }
@@ -25,72 +25,104 @@ export const RuleResultsPanel: React.FC<Props> = ({ results, onReviewClick }) =>
     return { HIGH: 0, MEDIUM: 1, LOW: 2 }[a.severity] - { HIGH: 0, MEDIUM: 1, LOW: 2 }[b.severity];
   });
 
-  const passCount = results.filter((r) => r.verdict === 'PASS').length;
-  const reviewCount = results.filter((r) => r.verdict === 'NEEDS_REVIEW').length;
+  const passCount      = results.filter((r) => r.verdict === 'PASS').length;
+  const reviewCount    = results.filter((r) => r.verdict === 'NEEDS_REVIEW').length;
   const violationCount = results.filter((r) => r.verdict === 'POTENTIAL_ISSUE').length;
 
   return (
-    <div className="p-3">
-      <p className="text-xs text-slate-400 mb-3 leading-relaxed">
-        The system checked whether required label information is present and correct under Legal Metrology rules.
-      </p>
-
-      {/* Simple summary */}
-      <div className="grid grid-cols-3 gap-2 mb-3">
-        <div className="p-2 rounded-sm bg-lmed-pass/10 border border-lmed-pass/30 text-center">
-          <p className="text-lg font-bold text-lmed-pass tabular-nums">{passCount}</p>
-          <p className="text-[10px] text-slate-400">Passed</p>
-        </div>
-        <div className="p-2 rounded-sm bg-lmed-review/10 border border-lmed-review/30 text-center">
-          <p className="text-lg font-bold text-lmed-review tabular-nums">{reviewCount}</p>
-          <p className="text-[10px] text-slate-400">Needs check</p>
-        </div>
-        <div className="p-2 rounded-sm bg-lmed-breach/10 border border-lmed-breach/30 text-center">
-          <p className="text-lg font-bold text-lmed-breach tabular-nums">{violationCount}</p>
-          <p className="text-[10px] text-slate-400">Problems</p>
-        </div>
+    <div>
+      {/* Summary row */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', borderBottom: '1px solid var(--gov-border)' }}>
+        {[
+          { label: 'Compliant', count: passCount,      bg: 'var(--gov-pass-bg)',    text: 'var(--gov-pass)',    border: 'var(--gov-pass-border)' },
+          { label: 'Review',    count: reviewCount,    bg: 'var(--gov-review-bg)',  text: 'var(--gov-review)',  border: 'var(--gov-review-border)' },
+          { label: 'Issues',    count: violationCount, bg: 'var(--gov-breach-bg)',  text: 'var(--gov-breach)',  border: 'var(--gov-breach-border)' },
+        ].map((s, i) => (
+          <div
+            key={i}
+            style={{
+              padding: '12px 16px',
+              textAlign: 'center',
+              background: s.bg,
+              borderRight: i < 2 ? '1px solid var(--gov-border)' : undefined,
+            }}
+          >
+            <p style={{ fontSize: 22, fontFamily: 'JetBrains Mono', fontWeight: 700, color: s.text }}>{s.count}</p>
+            <p style={{ fontSize: 11, fontWeight: 600, color: s.text, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{s.label}</p>
+          </div>
+        ))}
       </div>
 
+      {/* Penalty notice */}
       {violationCount > 0 && (
-        <div className="mb-3 p-2.5 rounded-sm status-breach text-xs">
-          <strong>{violationCount} problem{violationCount > 1 ? 's' : ''} found.</strong>
-          {' '}These may require action under Section 36 (fine up to ₹25,000 for first offence).
+        <div style={{ padding: '10px 16px', background: 'var(--gov-breach-bg)', borderBottom: '1px solid var(--gov-breach-border)', fontSize: 12 }}>
+          <strong style={{ color: 'var(--gov-breach)' }}>⚖ Statutory notice:</strong>
+          <span style={{ color: 'var(--gov-breach)', marginLeft: 4 }}>
+            {violationCount} issue{violationCount > 1 ? 's' : ''} may attract penalty under Section 36 LM Act, 2009 — up to ₹25,000 (first offence), ₹50,000 (repeat).
+          </span>
         </div>
       )}
 
-      <div className="space-y-2">
+      {/* Rule rows */}
+      <div>
         {sorted.map((r) => {
           const isViolation = r.verdict === 'POTENTIAL_ISSUE';
-          const isReview = r.verdict === 'NEEDS_REVIEW';
-          const isPass = r.verdict === 'PASS';
+          const isReview    = r.verdict === 'NEEDS_REVIEW';
+          const isPass      = r.verdict === 'PASS';
 
           return (
             <div
               key={r.ruleId}
-              className={`p-3 rounded-sm border ${
-                isViolation ? 'status-breach' : isReview ? 'status-review' : 'border-lmed-border bg-canvas-alt'
-              }`}
+              style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: 12,
+                padding: '10px 16px',
+                borderBottom: '1px solid var(--gov-border)',
+                borderLeft: `3px solid ${isViolation ? 'var(--gov-breach)' : isReview ? 'var(--gov-saffron-border)' : 'var(--gov-pass)'}`,
+                background: isViolation ? 'var(--gov-breach-bg)' : isReview ? 'var(--gov-review-bg)' : 'var(--gov-surface)',
+              }}
             >
-              <div className="flex items-start gap-2">
-                <div className="mt-0.5 shrink-0">
-                  {isViolation ? <XCircle className="w-4 h-4 text-lmed-breach" /> :
-                   isReview ? <AlertTriangle className="w-4 h-4 text-lmed-review" /> :
-                   <CheckCircle2 className="w-4 h-4 text-lmed-pass" />}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-slate-100">{r.displayName}</p>
-                  <p className={`text-xs font-medium mt-0.5 ${isPass ? 'text-lmed-pass' : isViolation ? 'text-lmed-breach' : 'text-lmed-review'}`}>
-                    {isPass ? '✓ Looks good' : isViolation ? '✗ Problem found' : '? Please verify manually'}
-                  </p>
-                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">{r.reason}</p>
-                </div>
+              {/* Icon */}
+              <div style={{ marginTop: 2, flexShrink: 0 }}>
+                {isViolation
+                  ? <XCircle style={{ width: 16, height: 16, color: 'var(--gov-breach)' }} />
+                  : isReview
+                  ? <AlertTriangle style={{ width: 16, height: 16, color: 'var(--gov-saffron-border)' }} />
+                  : <CheckCircle2 style={{ width: 16, height: 16, color: 'var(--gov-pass)' }} />
+                }
+              </div>
+
+              {/* Content */}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ fontWeight: 600, fontSize: 13, color: 'var(--gov-text-primary)' }}>{r.displayName}</p>
+                <p style={{ fontSize: 12, marginTop: 2, color: 'var(--gov-text-secondary)', lineHeight: 1.5 }}>{r.reason}</p>
+              </div>
+
+              {/* Verdict chip + action */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, flexShrink: 0 }}>
+                <span
+                  className={`gov-badge ${isViolation ? 'gov-badge-breach' : isReview ? 'gov-badge-review' : 'gov-badge-pass'}`}
+                >
+                  {isViolation ? 'ISSUE' : isReview ? 'REVIEW' : 'PASS'}
+                </span>
                 {!isPass && (
                   <button
                     onClick={() => onReviewClick(r)}
-                    className="shrink-0 flex items-center gap-0.5 px-2.5 py-1.5 bg-lmed-blue text-white rounded-sm text-xs font-medium hover:bg-lmed-navy"
+                    className="flex items-center gap-1"
+                    style={{
+                      padding: '4px 10px',
+                      fontSize: 11,
+                      fontWeight: 600,
+                      background: 'var(--gov-navy)',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: 3,
+                      cursor: 'pointer',
+                      fontFamily: 'IBM Plex Sans',
+                    }}
                   >
-                    Review
-                    <ChevronRight className="w-3.5 h-3.5" />
+                    Adjudicate <ChevronRight style={{ width: 12, height: 12 }} />
                   </button>
                 )}
               </div>
