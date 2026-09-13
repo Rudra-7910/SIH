@@ -330,7 +330,7 @@ export const InspectionDashboard: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-canvas flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ background: 'var(--gov-page)' }}>
       <Header
         onShowArchitecture={() => setShowArchitecture(true)}
         sessionId={session?.sessionId}
@@ -339,46 +339,46 @@ export const InspectionDashboard: React.FC = () => {
         stats={stats}
       />
 
-      <main className="flex-1 max-w-desk mx-auto w-full px-3 sm:px-4 py-3 flex flex-col gap-3 min-h-0">
+      <main style={{ flex: 1, maxWidth: 1600, margin: '0 auto', width: '100%', padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
         {/* Toolbar */}
-        <div className="flex flex-wrap items-center justify-between gap-2 shrink-0">
+        <div className="flex flex-wrap items-center justify-between gap-2" style={{ flexShrink: 0 }}>
           <div className="flex items-center gap-2">
-            <button onClick={handleNewInspection} className="statutory-btn-primary">
-              <PlusCircle className="w-4 h-4" />
-              Start over
+            <button onClick={handleNewInspection} className="gov-btn-primary">
+              <PlusCircle style={{ width: 15, height: 15 }} />
+              New Inspection
             </button>
             <button
               onClick={() => setShowHistory(!showHistory)}
-              className={`statutory-btn-secondary ${showHistory ? 'border-lmed-blue text-slate-200' : ''}`}
+              className="gov-btn-secondary"
+              style={showHistory ? { borderColor: 'var(--gov-navy)', color: 'var(--gov-navy)' } : {}}
             >
-              <History className="w-4 h-4" />
-              Past inspections
+              <History style={{ width: 15, height: 15 }} />
+              Past Inspections
             </button>
           </div>
           <div className="flex items-center gap-2">
-            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-[10px] font-mono font-semibold border ${
-              isOnline ? 'status-compliant' : 'status-review'
-            }`}>
-              {isOnline ? <Wifi className="w-3.5 h-3.5" /> : <WifiOff className="w-3.5 h-3.5" />}
-              {isOnline ? 'Connected' : 'Offline — saves locally'}
+            <span className={`gov-badge ${isOnline ? 'gov-badge-pass' : 'gov-badge-review'}`} style={{ fontFamily: 'JetBrains Mono' }}>
+              {isOnline ? <Wifi style={{ width: 11, height: 11 }} /> : <WifiOff style={{ width: 11, height: 11 }} />}
+              {isOnline ? 'Online' : 'Offline — saves locally'}
             </span>
             {pendingSyncCount > 0 && (
               <button
                 onClick={triggerSync}
                 disabled={syncing || !isOnline}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs border border-lmed-blue text-slate-300 hover:bg-lmed-blue/20 transition-colors disabled:opacity-50"
+                className="gov-btn-secondary"
+                style={{ fontSize: 12 }}
               >
-                <RefreshCw className={`w-3 h-3 ${syncing ? 'animate-spin' : ''}`} />
-                Sync {pendingSyncCount} saved photo{pendingSyncCount > 1 ? 's' : ''}
+                <RefreshCw style={{ width: 13, height: 13 }} className={syncing ? 'animate-spin' : ''} />
+                Sync {pendingSyncCount} pending
               </button>
             )}
           </div>
         </div>
 
         {error && (
-          <div className="rounded-sm p-2.5 flex items-center justify-between status-breach shrink-0">
-            <p className="text-[11px] font-mono">{error}</p>
-            <button onClick={() => setError(null)} className="text-sm ml-2 opacity-70 hover:opacity-100">✕</button>
+          <div className="gov-verdict-breach" style={{ padding: '10px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+            <p style={{ fontSize: 12, fontFamily: 'JetBrains Mono', color: 'var(--gov-breach)' }}>{error}</p>
+            <button onClick={() => setError(null)} style={{ fontSize: 14, marginLeft: 8, opacity: 0.7, background: 'none', border: 'none', cursor: 'pointer', color: 'var(--gov-breach)' }}>✕</button>
           </div>
         )}
 
@@ -393,7 +393,7 @@ export const InspectionDashboard: React.FC = () => {
           <>
           <WorkflowGuide currentStep={workflowStep} hasResults={hasResults} />
 
-          <div className="flex-1 grid grid-cols-1 xl:grid-cols-[340px_1fr_420px] gap-3 min-h-0">
+          <div className="flex-1 grid grid-cols-1 xl:grid-cols-[320px_1fr_420px] gap-3 min-h-0">
             {/* ZONE 1: Case Ingestion Rail */}
             <aside className="flex flex-col gap-3 min-h-0 xl:overflow-y-auto">
               <DemoScenarioSelector
@@ -414,18 +414,28 @@ export const InspectionDashboard: React.FC = () => {
               <ProcessingStatus steps={processingSteps} />
 
               {session && session.views.length > 1 && (
-                <div className="flex gap-0.5 shrink-0 border-b border-lmed-border">
+                <div className="flex" style={{ borderBottom: '1px solid var(--gov-border)', background: 'var(--gov-surface)' }}>
                   {session.views.map((v, i) => (
                     <button
                       key={i}
                       onClick={() => { setSelectedViewIndex(i); setCurrentView(v); }}
-                      className={`px-3 py-1.5 text-[10px] font-mono font-semibold capitalize transition-colors border-b-2 -mb-px ${
-                        selectedViewIndex === i
-                          ? 'text-slate-200 border-lmed-saffron bg-lmed-card/50'
-                          : 'text-slate-600 border-transparent hover:text-slate-400'
-                      }`}
+                      style={{
+                        padding: '6px 14px',
+                        fontSize: 11,
+                        fontFamily: 'JetBrains Mono',
+                        fontWeight: 600,
+                        textTransform: 'capitalize',
+                        background: selectedViewIndex === i ? 'var(--gov-navy-bg)' : 'transparent',
+                        borderBottom: selectedViewIndex === i ? '2px solid var(--gov-navy)' : '2px solid transparent',
+                        color: selectedViewIndex === i ? 'var(--gov-navy)' : 'var(--gov-text-muted)',
+                        cursor: 'pointer',
+                        border: 'none',
+                        borderBottomStyle: 'solid',
+                        borderBottomWidth: 2,
+                        borderBottomColor: selectedViewIndex === i ? 'var(--gov-navy)' : 'transparent',
+                      }}
                     >
-                      {v.viewLabel} face
+                      {v.viewLabel}
                     </button>
                   ))}
                 </div>
@@ -447,32 +457,43 @@ export const InspectionDashboard: React.FC = () => {
             </section>
 
             {/* ZONE 3: Results panel */}
-            <aside className="statutory-panel flex flex-col min-h-0 xl:max-h-[calc(100vh-280px)]">
-              <div className="shrink-0 border-b border-lmed-border">
-                <p className="px-3 pt-2 pb-1 text-xs font-medium text-slate-400">Step 3 — Results</p>
-                <div className="flex">
+            <aside className="gov-panel flex flex-col min-h-0 xl:max-h-[calc(100vh-240px)]">
+              <div style={{ flexShrink: 0, borderBottom: '1px solid var(--gov-border)' }}>
+                <div style={{ display: 'flex', borderBottom: '1px solid var(--gov-border)' }}>
                   {TAB_LABELS.map((tab) => (
                     <button
                       key={tab.id}
                       onClick={() => setRightTab(tab.id)}
-                      className={`statutory-tab relative flex-1 ${rightTab === tab.id ? 'statutory-tab-active' : ''}`}
                       title={tab.hint}
+                      style={{
+                        flex: 1,
+                        padding: '9px 8px',
+                        fontSize: 11,
+                        fontWeight: 600,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.04em',
+                        background: rightTab === tab.id ? 'var(--gov-navy-bg)' : 'var(--gov-surface-alt)',
+                        color: rightTab === tab.id ? 'var(--gov-navy)' : 'var(--gov-text-muted)',
+                        border: 'none',
+                        borderBottom: rightTab === tab.id ? '2px solid var(--gov-navy)' : '2px solid transparent',
+                        cursor: 'pointer',
+                        fontFamily: 'IBM Plex Sans',
+                        transition: 'background 0.15s, color 0.15s',
+                        position: 'relative',
+                      }}
                     >
                       {tab.label}
                       {tab.id === 'violations' && violationCount > 0 && (
-                        <span className="ml-1 inline-flex items-center justify-center min-w-[16px] h-4 px-1 rounded-full bg-lmed-breach text-[9px] text-white font-bold">
+                        <span style={{ marginLeft: 4, padding: '1px 5px', borderRadius: 2, background: 'var(--gov-breach)', color: '#fff', fontSize: 9, fontWeight: 700 }}>
                           {violationCount}
                         </span>
                       )}
                     </button>
                   ))}
                 </div>
-                <p className="px-3 pb-2 text-[10px] text-slate-600">
-                  {TAB_LABELS.find((t) => t.id === rightTab)?.hint}
-                </p>
               </div>
 
-              <div className="flex-1 overflow-y-auto min-h-0">
+              <div style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
                 {rightTab === 'declarations' && session && (
                   <DeclarationTable
                     fields={session.mergedFields}
@@ -481,8 +502,8 @@ export const InspectionDashboard: React.FC = () => {
                   />
                 )}
                 {rightTab === 'declarations' && !session && (
-                  <div className="p-6 text-center">
-                    <p className="text-sm text-slate-400">← Upload a photo or try a sample to begin</p>
+                  <div style={{ padding: 32, textAlign: 'center' }}>
+                    <p style={{ fontSize: 13, color: 'var(--gov-text-muted)' }}>Select a demo case or upload a photo to begin</p>
                   </div>
                 )}
 
@@ -490,8 +511,8 @@ export const InspectionDashboard: React.FC = () => {
                   <RuleResultsPanel results={session.ruleResults} onReviewClick={handleReviewClick} />
                 )}
                 {rightTab === 'violations' && !session && (
-                  <div className="p-6 text-center">
-                    <p className="text-sm text-slate-400">Results will appear here after you upload a photo</p>
+                  <div style={{ padding: 32, textAlign: 'center' }}>
+                    <p style={{ fontSize: 13, color: 'var(--gov-text-muted)' }}>Statutory compliance results will appear here after a scan</p>
                   </div>
                 )}
 
